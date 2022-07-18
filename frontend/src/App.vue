@@ -1,23 +1,20 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
+    <div id="app">
+        <Component :is='layout'>
+            <router-view :key="$route.fullPath"/>
+        </Component>
+    </div>
 </template>
 
 <script>
+const defaultLayout = 'default'
+
 export default {
-  name: 'App'
+    name: 'App',
+    computed: {
+        layout() {
+            return (this.$route.meta.layout || defaultLayout) + '-layout'
+        }
+    }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
