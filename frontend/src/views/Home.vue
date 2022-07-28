@@ -101,6 +101,8 @@
 import CardBookBlock from '@/components/Common/CardBookBlock'
 import TrendyBookBlock from '@/components/TrendyBookBlock'
 import axios from 'axios'
+import {mapActions} from 'vuex'
+// import {mapActions} from 'vuex'
 
 export default {
     name: 'Home',
@@ -113,23 +115,34 @@ export default {
             latestBooks: [],
             viewMoreData: {
                 isShow: true,
-                url: ''
+                url: {name: 'search'}
             }
         }
     },
+    beforeCreate() {
+        document.title = 'Home | Book Store'
+    },
     mounted() {
         this.getLatestBooks()
+        // this.setHeaderTitle('Home')
+    },
+    computed: {
+        // ...mapState(['headerTitle'])
     },
     methods: {
-        getLatestBooks() {
-            axios.get('/api/v1/books/', {
+        ...mapActions(['setIsLoading']),
+        async getLatestBooks() {
+            this.setIsLoading({isLoading: true})
+            await axios.get('/api/v1/books/', {
                 params: {
                     limit: 8
                 }
             }).then(response => {
                 this.latestBooks = response.data.results
+                this.setIsLoading({isLoading: false})
             }).catch(error => {
                 console.log(error)
+                this.setIsLoading({isLoading: false})
             })
         }
     }

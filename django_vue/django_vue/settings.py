@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'imagekit',
+    'djoser',
 
     'book',
     'order',
@@ -135,10 +138,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+# }
 
 SITE_URL = 'http://127.0.0.1:8000'

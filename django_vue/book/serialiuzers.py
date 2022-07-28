@@ -49,3 +49,5 @@ class BookSerializer(serializers.ModelSerializer):
             'author',
             'favorite'
         )
+
+

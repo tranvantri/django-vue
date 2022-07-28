@@ -1,10 +1,5 @@
 <template>
     <div>
-        <!-- loader Start -->
-        <div id="loading">
-            <div id="loading-center"></div>
-        </div>
-        <!-- loader END -->
         <!-- Wrapper Start -->
         <div class="wrapper">
             <!-- TOP Nav Bar START -->
@@ -20,7 +15,7 @@
 
         <!-- color-customizer -->
         <div class="iq-colorbox color-fix">
-            <div class="buy-button"><a class="color-full" href="#"><i class="fa fa-spinner fa-spin"></i></a></div>
+            <Loading/>
             <div id="right-sidebar-scrollbar" class="iq-colorbox-inner">
                 <div class="clearfix color-picker">
                     <h3 class="iq-font-black">Booksto Awesome Color</h3>
@@ -59,10 +54,12 @@
 <script>
 import Header from './Header'
 import Footer from './Footer'
+import Loading from './Loading'
 
 export default {
     name: 'Default',
     components: {
+        Loading,
         Header,
         Footer
     }

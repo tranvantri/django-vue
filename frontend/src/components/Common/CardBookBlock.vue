@@ -1,13 +1,13 @@
 <template>
     <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
-        <div
+        <div v-if="isShowHeader"
             class="iq-card-header d-flex justify-content-between align-items-center position-relative">
             <div class="iq-header-title">
                 <h4 class="card-title mb-0">{{ title }}</h4>
             </div>
             <div class="iq-card-header-toolbar d-flex align-items-center">
-                <a v-if="viewMoreData.isShow" href="category.html" class="btn btn-sm btn-primary view-more">View
-                    More</a>
+                <router-link v-if="viewMoreData.isShow" :to="viewMoreData.url" class="btn btn-sm btn-primary view-more">View
+                    More</router-link>
             </div>
         </div>
         <div class="iq-card-body">
@@ -28,10 +28,10 @@ export default {
     },
     props: {
         'books': {type: Array, required: true},
-        'title': {type: String, required: true},
-        'viewMoreData': {type: Object, required: true}
+        'title': {type: String},
+        'viewMoreData': {type: Object},
+        'isShowHeader': {type: Boolean, default: true}
     }
-
 }
 </script>
 

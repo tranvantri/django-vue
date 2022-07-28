@@ -12,15 +12,27 @@ from django.db.models import Prefetch
 class BooksList(APIView):
 
     def get(self, request, format=None):
-        is_trendy = bool(request.query_params.get('is_trendy', False))
+        isTrendy = bool(request.query_params.get('is_trendy', False))
+        categoryId = int(request.query_params.get('category_id', 0))
+        authorId = int(request.query_params.get('author_id', 0))
+        q = str(request.query_params.get('q', ''))
         limit = int(request.query_params.get('limit', 10))
         sortBy = '-' if request.query_params.get('sort_by', 'desc') == 'desc' else ''
 
         query_set = Book.objects.filter(is_active=True, category__is_active=True)
         query_set.order_by(sortBy + 'date_added')
 
-        if is_trendy:
+        if isTrendy:
             query_set = query_set.filter(is_trendy=True)
+
+        if q:
+            query_set = query_set.filter(name__istartswith=q)
+
+        if categoryId:
+            query_set = query_set.filter(category_id=categoryId)
+
+        if authorId:
+            query_set = query_set.filter(author_id=authorId)
 
         if request.user.is_authenticated:
             is_favorite = bool(request.query_params.get('is_favorite', False))

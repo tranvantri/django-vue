@@ -9,24 +9,24 @@
                             <div class="iq-card-header d-flex justify-content-between align-items-center">
                                 <h4 class="card-title mb-0">Books Description</h4>
                             </div>
-                            <div class="iq-card-body pb-0" >
+                            <div class="iq-card-body pb-0">
                                 <div class="description-contens align-items-top row">
                                     <div class="col-md-6">
                                         <div class="iq-card-transparent iq-card-block iq-card-stretch iq-card-height">
                                             <div class="iq-card-body p-0">
                                                 <div class="row align-items-center">
                                                     <div class="col-3">
-<!--                                                        <ul id="description-slider-nav"-->
-<!--                                                            class="list-inline p-0 m-0 d-flex align-items-center">-->
-<!--                                                            <li>-->
-<!--                                                                <a href="javascript:void(0);">-->
-<!--                                                                    <img :src="book.get_image"-->
-<!--                                                                         :alt="book.name"-->
-<!--                                                                         class="img-fluid rounded w-100">-->
-<!--                                                                </a>-->
-<!--                                                            </li>-->
+                                                        <!--                                                        <ul id="description-slider-nav"-->
+                                                        <!--                                                            class="list-inline p-0 m-0 d-flex align-items-center">-->
+                                                        <!--                                                            <li>-->
+                                                        <!--                                                                <a href="javascript:void(0);">-->
+                                                        <!--                                                                    <img :src="book.get_image"-->
+                                                        <!--                                                                         :alt="book.name"-->
+                                                        <!--                                                                         class="img-fluid rounded w-100">-->
+                                                        <!--                                                                </a>-->
+                                                        <!--                                                            </li>-->
 
-<!--                                                        </ul>-->
+                                                        <!--                                                        </ul>-->
                                                     </div>
                                                     <div class="col-9">
                                                         <ul class="list-inline p-0 m-0  d-flex align-items-center">
@@ -60,7 +60,7 @@
                                                     class="text-body" v-if="book.author">{{ book.author.name }}</span>
                                                 </div>
                                                 <div class="mb-4 d-flex align-items-center">
-                                                    <a href="#" class="btn btn-primary view-more mr-2">Add To Cart</a>
+                                                    <i @click="addToCartHandle" class="btn btn-primary view-more mr-2">Add To Cart</i>
                                                 </div>
                                                 <div class="mb-3">
                                                     <a href="#" class="text-body text-center"><span
@@ -112,6 +112,7 @@
 <script>
 import TrendyBookBlock from '../components/TrendyBookBlock'
 import axios from 'axios'
+import {mapActions} from 'vuex'
 
 export default {
     name: 'BookDetail',
@@ -127,13 +128,32 @@ export default {
         this.getBook()
     },
     methods: {
-        getBook() {
-            axios.get(`/api/v1/book/${this.$route.params.id}`)
+        ...mapActions(['setIsLoading', 'addToCart']),
+        async getBook() {
+            this.setIsLoading({isLoading: true})
+            await axios.get(`/api/v1/book/${this.$route.params.id}`)
                 .then(response => {
                     this.book = response.data
-                }).catch(error => {
-                console.log(error)
-            })
+                    document.title = this.book.name + ' | Book Store'
+                    this.setIsLoading({isLoading: false})
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setIsLoading({isLoading: false})
+                })
+        },
+        addToCartHandle() {
+            const item = {
+                book: this.book,
+                quantity: 1
+            }
+
+            this.addToCart(item)
+        }
+    },
+    watch: {
+        $route(to, from) {
+            this.getBook()
         }
     }
 }
