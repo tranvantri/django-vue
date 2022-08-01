@@ -1,5 +1,6 @@
 export default {
     headerTitle: state => state.headerTitle,
+    breadcrumbs: state => state.breadcrumbs,
     isLoading: state => state.isLoading,
     isAuthentication: state => state.isAuthentication,
     token: state => state.token,

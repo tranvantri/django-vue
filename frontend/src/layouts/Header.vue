@@ -17,11 +17,17 @@
                     </div>
                 </div>
                 <div class="navbar-breadcrumb">
-                    <h5 class="mb-0">Shop</h5>
+                    <h5 class="mb-0">
+                        <router-link :to="{name:'home'}">Shop</router-link>
+                    </h5>
                     <nav aria-label="breadcrumb">
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Home Page</li>
+                            <li v-for="(breadcrumb, index) in breadcrumbs" class="breadcrumb-item" :key="index"
+                                :class="[index === lastBreadcrumbs ? 'active' : '']">
+                                <router-link v-if="breadcrumb.url" :to="breadcrumb.url">{{ breadcrumb.title }}
+                                </router-link>
+                                <span v-else>{{ breadcrumb.title }}</span>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -50,7 +56,7 @@
                         </li>
 
                         <li v-if="isAuthentication" class="nav-item nav-icon dropdown">
-                            <a href="#" class="search-toggle iq-waves-effect text-gray rounded">
+                            <a style="cursor: pointer" class="search-toggle iq-waves-effect text-gray rounded">
                                 <i class="ri-shopping-cart-2-line"></i>
                                 <span class="badge badge-danger count-cart rounded-circle">{{ cartTotalLength }}</span>
                             </a>
@@ -59,65 +65,31 @@
                                     <div class="iq-card-body p-0 toggle-cart-info">
                                         <div class="bg-primary p-3">
                                             <h5 class="mb-0 text-white">All Carts<small
-                                                class="badge  badge-light float-right pt-1">{{ cartTotalLength }}</small>
+                                                class="badge  badge-light float-right pt-1">{{
+                                                    cartTotalLength
+                                                }}</small>
                                             </h5>
                                         </div>
-                                        <a href="#" class="iq-sub-card">
+                                        <a href="#" class="iq-sub-card" v-for="item in cart.items" :key="item.book.id">
                                             <div class="media align-items-center">
                                                 <div class="">
-                                                    <img class="rounded" src="images/cart/01.jpg" alt="">
+                                                    <img class="rounded" :src="item.book.get_thumbnail"
+                                                         :alt="item.book.name">
                                                 </div>
                                                 <div class="media-body ml-3">
-                                                    <h6 class="mb-0 ">Night People book</h6>
-                                                    <p class="mb-0">$32</p>
+                                                    <h6 class="mb-0 ">{{ item.book.name }}</h6>
+                                                    <p class="mb-0">{{ item.quantity }} x ${{ item.book.price }}</p>
                                                 </div>
-                                                <div class="float-right font-size-24 text-danger"><i
-                                                    class="ri-close-fill"></i></div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="media align-items-center">
-                                                <div class="">
-                                                    <img class="rounded" src="images/cart/02.jpg" alt="">
-                                                </div>
-                                                <div class="media-body ml-3">
-                                                    <h6 class="mb-0 ">The Sin Eater Book</h6>
-                                                    <p class="mb-0">$40</p>
-                                                </div>
-                                                <div class="float-right font-size-24 text-danger"><i
-                                                    class="ri-close-fill"></i></div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="media align-items-center">
-                                                <div class="">
-                                                    <img class="rounded" src="images/cart/03.jpg" alt="">
-                                                </div>
-                                                <div class="media-body ml-3">
-                                                    <h6 class="mb-0 ">the Orange Tree</h6>
-                                                    <p class="mb-0">$30</p>
-                                                </div>
-                                                <div class="float-right font-size-24 text-danger"><i
-                                                    class="ri-close-fill"></i></div>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="iq-sub-card">
-                                            <div class="media align-items-center">
-                                                <div class="">
-                                                    <img class="rounded" src="images/cart/04.jpg" alt="">
-                                                </div>
-                                                <div class="media-body ml-3">
-                                                    <h6 class="mb-0 ">Harsh Reality book</h6>
-                                                    <p class="mb-0">$25</p>
-                                                </div>
-                                                <div class="float-right font-size-24 text-danger"><i
+                                                <div @click="removeFromCart(item)"
+                                                     class="float-right font-size-24 text-danger"><i
                                                     class="ri-close-fill"></i></div>
                                             </div>
                                         </a>
                                         <div class="d-flex align-items-center text-center p-3">
-                                            <router-link :to="{name: 'cart'}" class="btn btn-primary mr-2 iq-sign-btn" role="button">View
-                                                Cart</router-link>
-                                            <a class="btn btn-primary iq-sign-btn" href="#" role="button">Shop now</a>
+                                            <router-link :to="{name: 'cart'}" class="btn btn-primary mr-2 iq-sign-btn"
+                                                         role="button">View
+                                                Cart
+                                            </router-link>
                                         </div>
                                     </div>
                                 </div>
@@ -199,7 +171,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
     name: 'Header',
@@ -209,12 +181,16 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isAuthentication', 'cartTotalLength'])
+        ...mapGetters(['isAuthentication', 'cartTotalLength', 'cart', 'breadcrumbs']),
+        lastBreadcrumbs() {
+            return this.breadcrumbs.length - 1
+        }
     },
     methods: {
         onSubmitSearch() {
             this.$router.push({name: 'search', query: {q: this.searchText}})
-        }
+        },
+        ...mapActions(['removeFromCart'])
     }
 }
 </script>

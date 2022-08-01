@@ -1,28 +1,23 @@
 from rest_framework import serializers
 from .models import Order, OrderItem
-from book.serialiuzers import BookSerializer
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    book = BookSerializer()
-
     class Meta:
         model = OrderItem
-        fields = [
-            'id',
+        fields = (
             'price',
             'book',
             'quantity',
-            'book',
-        ]
+        )
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
+    book_items = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = [
+        fields = (
             'id',
             'first_name',
             'last_name',
@@ -32,13 +27,13 @@ class OrderSerializer(serializers.ModelSerializer):
             'place',
             'phone',
             'created_at',
-            'stripe_token'
+            'stripe_token',
             'paid_amount',
-            'items'
-        ]
+            'book_items'
+        )
 
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
+        items_data = validated_data.pop('book_items')
         order = Order.objects.create(**validated_data)
 
         for item_data in items_data:

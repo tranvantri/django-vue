@@ -1,6 +1,6 @@
 export default {
-    setBreadcrumbs({commit}, {breadcrumbs}) {
-        commit('setBreadcrumbs', {breadcrumbs})
+    setBreadcrumbs({commit}, breadcrumbs) {
+        commit('setBreadcrumbs', breadcrumbs)
     },
     setIsLoading({commit}, {isLoading}) {
         commit('setIsLoading', {isLoading})
@@ -28,5 +28,9 @@ export default {
     },
     updateStep({commit}, newStep) {
         commit('updateStep', newStep)
+    },
+    clearCart({commit}) {
+        commit('clearCart')
     }
+
 }

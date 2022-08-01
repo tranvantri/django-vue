@@ -5,9 +5,13 @@ export default {
         items: [],
         step: 0,
         userInfo: {
-            full_name: '',
+            first_name: '',
+            last_name: '',
             phone: '',
-            address: ''
+            address: '',
+            zipcode: '',
+            place: '',
+            email: ''
         }
     },
     isAuthentication: false,

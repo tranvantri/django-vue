@@ -1,5 +1,5 @@
 export default {
-    setBreadcrumbs: (state, {breadcrumbs}) => {
+    setBreadcrumbs: (state, breadcrumbs) => {
         state.breadcrumbs = breadcrumbs
     },
     setIsLoading: (state, {isLoading}) => {
@@ -62,5 +62,10 @@ export default {
         state.token = ''
         state.isAuthentication = false
         localStorage.setItem('token', '')
+    },
+    clearCart(state) {
+        state.cart.items = []
+        state.cart.step = 0
+        localStorage.setItem('cart', JSON.stringify(state.cart))
     }
 }

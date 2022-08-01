@@ -86,16 +86,32 @@
                                         <div class="row mt-3">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label>Full Name: *</label>
+                                                    <label>First Name: *</label>
                                                     <input type="text" class="form-control"
-                                                           v-model="cart.userInfo.full_name" name="fname" required="">
+                                                           v-model="cart.userInfo.first_name" name="first_name"
+                                                           required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Last Name: *</label>
+                                                    <input type="text" class="form-control"
+                                                           v-model="cart.userInfo.last_name" name="last_name"
+                                                           required="">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Mobile Number: *</label>
                                                     <input type="number" class="form-control"
-                                                           v-model="cart.userInfo.phone" name="mno" required="">
+                                                           v-model="cart.userInfo.phone" name="phone" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Email: *</label>
+                                                    <input type="email" class="form-control"
+                                                           v-model="cart.userInfo.email" name="email" required="">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -103,6 +119,20 @@
                                                     <label>Address: *</label>
                                                     <input type="text" class="form-control"
                                                            v-model="cart.userInfo.address" name="address" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Place: *</label>
+                                                    <input type="text" class="form-control"
+                                                           v-model="cart.userInfo.place" name="place" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Zip code: *</label>
+                                                    <input type="text" class="form-control"
+                                                           v-model="cart.userInfo.zipcode" name="zipcode" required="">
                                                 </div>
                                             </div>
                                         </div>
@@ -113,10 +143,10 @@
                         <div class="col-lg-4">
                             <div class="iq-card">
                                 <div class="iq-card-body">
-                                    <h4 class="mb-2">{{cart.userInfo.full_name}}</h4>
+                                    <h4 class="mb-2">{{ fullName }}</h4>
                                     <div class="shipping-address">
-                                        <p class="mb-0">{{cart.userInfo.address}}</p>
-                                        <p>{{cart.userInfo.phone}}</p>
+                                        <p class="mb-0">{{ cart.userInfo.address }}</p>
+                                        <p>{{ cart.userInfo.phone }}</p>
                                     </div>
                                     <hr>
                                     <span v-if="!checkRequired" @click.prevent="updateStep(2)"
@@ -133,66 +163,20 @@
                 <div v-show="cart.step === 2" id="payment" class="card-block show p-0 col-12">
                     <div class="row align-item-center">
                         <div class="col-lg-8">
-                            <div class="iq-card">
-                                <div class="iq-card-header d-flex justify-content-between">
-                                    <div class="iq-header-title">
-                                        <h4 class="card-title">Payment Options</h4>
-                                    </div>
-                                </div>
-                                <div class="iq-card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <img src="images/booking/cart.png" alt="" height="40" width="50">
-                                            <span>US Unlocked Debit Card 12XX XXXX XXXX 0000</span>
-                                        </div>
-                                        <span>Nik John</span>
-                                        <span>28/2020</span>
-                                    </div>
-                                    <form class="mt-3">
-                                        <div class="d-flex align-items-center">
-                                            <span>Enter CVV: </span>
-                                            <div class="cvv-input ml-3 mr-3">
-                                                <input type="text" class="form-control" required="">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Continue</button>
-                                        </div>
-                                    </form>
-                                    <hr>
-                                    <div class="card-lists">
-                                        <div class="form-group">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="credit" name="customRadio"
-                                                       class="custom-control-input">
-                                                <label class="custom-control-label" for="credit"> Credit / Debit / ATM
-                                                    Card</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="netbaking" name="customRadio"
-                                                       class="custom-control-input">
-                                                <label class="custom-control-label" for="netbaking"> Net Banking</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="emi" name="emi" class="custom-control-input">
-                                                <label class="custom-control-label" for="emi"> EMI (Easy
-                                                    Installment)</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="cod" name="cod" class="custom-control-input">
-                                                <label class="custom-control-label" for="cod"> Cash On Delivery</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                </div>
-                            </div>
+                            <stripe-element-card
+                                ref="elementRef"
+                                :pk="publishableKey"
+                                @token="stripeTokenHandler"
+                            />
                         </div>
+
                         <div class="col-lg-4">
                             <div class="iq-card">
                                 <div class="iq-card-body">
                                     <h4 class="mb-2">Price Details</h4>
                                     <div class="d-flex justify-content-between">
-                                        <span>Price 3 Items</span>
-                                        <span><strong>$1000.00</strong></span>
+                                        <span>Price {{ cartTotalLength }} Items</span>
+                                        <span><strong>${{ cartTotalPrice }}</strong></span>
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <span>Delivery Charges</span>
@@ -201,9 +185,11 @@
                                     <hr>
                                     <div class="d-flex justify-content-between">
                                         <span>Amount Payable</span>
-                                        <span><strong>$1000.00</strong></span>
+                                        <span><strong>${{ cartTotalPrice }}</strong></span>
                                     </div>
                                     <hr>
+                                    <span v-show="cart.step===2"
+                                          class="btn btn-primary d-block mt-1 next" @click="submitGenerateToken">Payment With Stripe</span>
                                     <span v-show="cart.step===2" @click.prevent="updateStep(1)"
                                           class="btn btn-outline-info d-block mt-1 next">Back</span>
                                 </div>
@@ -219,10 +205,28 @@
 <script>
 import CartItem from '../components/CartItem'
 import {mapActions, mapGetters} from 'vuex'
+import axios from 'axios'
+import {StripeElementCard} from '@vue-stripe/vue-stripe'
 
 export default {
     name: 'Cart',
-    components: {CartItem},
+    components: {CartItem, StripeElementCard},
+    data() {
+        return {
+            errors: [],
+            publishableKey: 'pk_test_51J7HG4DxrR0RpsJ3fcCXfgkEgVywgyojzhwRDrdb7GxWoPuBXiU4BTdicaFMWTdj9vz7KSlbKkic65LDuOeXmKXk00XRVutLWr'
+        }
+    },
+    created() {
+        document.title = 'CheckOut | BookStore'
+        this.setBreadcrumbs([
+            {
+                title: 'Home',
+                url: {name: 'home'}
+            },
+            {title: 'Cart'}
+        ])
+    },
     computed: {
         ...mapGetters({
             cart: 'cart',
@@ -232,11 +236,57 @@ export default {
         checkRequired() {
             let userInfo = this.cart.userInfo
 
-            return (userInfo.full_name === '' || userInfo.phone === '' || userInfo.address === '')
+            return (userInfo.full_name === '' || userInfo.phone === '' || userInfo.address === '' || userInfo.zipcode === '')
+        },
+        fullName() {
+            return `${this.cart.userInfo.first_name} ${this.cart.userInfo.last_name}`
         }
     },
     methods: {
-        ...mapActions(['updateStep', 'updateUserInfo'])
+        ...mapActions(['updateStep', 'updateUserInfo', 'setBreadcrumbs', 'setIsLoading', 'clearCart']),
+        submitGenerateToken() {
+            this.setIsLoading({isLoading: true})
+            this.$refs.elementRef.submit()
+        },
+        async stripeTokenHandler(token) {
+            const items = []
+
+            for (let i = 0; i < this.cart.items.length; i++) {
+                const item = this.cart.items[i]
+                const obj = {
+                    book: item.book.id,
+                    quantity: item.quantity,
+                    price: item.book.price * item.quantity
+                }
+
+                items.push(obj)
+            }
+
+            const userInfo = this.cart.userInfo
+
+            const data = {
+                'first_name': userInfo.first_name,
+                'last_name': userInfo.last_name,
+                'email': userInfo.email,
+                'address': userInfo.address,
+                'zipcode': userInfo.zipcode,
+                'place': userInfo.place,
+                'phone': userInfo.phone,
+                'book_items': items,
+                'stripe_token': token.id
+            }
+
+            await axios.post('/api/v1/checkout/', data)
+                .then(() => {
+                    this.clearCart()
+                    this.$router.push({name: 'success'})
+                }).catch(error => {
+                    this.errors.push('Something went wrong. Please try again')
+                    console.log(error)
+                })
+
+            this.setIsLoading({isLoading: false})
+        }
     }
 }
 </script>

@@ -127,8 +127,18 @@ export default {
     mounted() {
         this.getBook()
     },
+    created() {
+        this.setBreadcrumbs([
+            {
+                title: 'Home',
+                url: {name: 'home'}
+            },
+            {title: 'Book Detail'}
+
+        ])
+    },
     methods: {
-        ...mapActions(['setIsLoading', 'addToCart']),
+        ...mapActions(['setIsLoading', 'addToCart', 'setBreadcrumbs']),
         async getBook() {
             this.setIsLoading({isLoading: true})
             await axios.get(`/api/v1/book/${this.$route.params.id}`)
@@ -149,6 +159,13 @@ export default {
             }
 
             this.addToCart(item)
+             this.$toast.success('Add to cart successfully', {
+                        type: 'success',
+                        dismissible: true,
+                        pauseOnHover: true,
+                        duration: 3000,
+                        position: 'bottom-right'
+                    })
         }
     },
     watch: {

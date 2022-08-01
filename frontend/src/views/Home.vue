@@ -126,11 +126,11 @@ export default {
         this.getLatestBooks()
         // this.setHeaderTitle('Home')
     },
-    computed: {
-        // ...mapState(['headerTitle'])
+    created() {
+        this.setBreadcrumbs([])
     },
     methods: {
-        ...mapActions(['setIsLoading']),
+        ...mapActions(['setIsLoading', 'setBreadcrumbs']),
         async getLatestBooks() {
             this.setIsLoading({isLoading: true})
             await axios.get('/api/v1/books/', {

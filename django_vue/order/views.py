@@ -1,13 +1,8 @@
 import stripe
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.http import Http404
-
 from rest_framework import status, authentication, permissions
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Order, OrderItem
 from .serializers import OrderSerializer
 
 
@@ -17,12 +12,14 @@ from .serializers import OrderSerializer
 def checkout(request):
     serializer = OrderSerializer(data=request.data)
 
-    if serializer.is_valid():
+    if serializer.is_valid(True):
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        paid_amount = sum(item.get('quantity') * item.get('price') for item in serializer.validated_data['items'])
+        paid_amount = 0
+        for item in serializer.validated_data['book_items']:
+            paid_amount += item.get('quantity') * item.get('price')
 
         try:
-            charge = stripe.Charge.create(
+            stripe.Charge.create(
                 amount=int(paid_amount * 100),
                 currency='USD',
                 description='Charge from Tvtri',
@@ -31,9 +28,10 @@ def checkout(request):
 
             serializer.save(user=request.user, paid_amount=paid_amount)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response([], status=status.HTTP_201_CREATED)
 
-        except Exception:
+        except Exception as e:
+            print(e)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

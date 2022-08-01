@@ -6,6 +6,7 @@ import SearchPage from '../views/SearchPage'
 import Login from '../views/Login'
 import Signup from '../views/Signup'
 import Cart from '../views/Cart'
+import SuccessPayment from '../views/SuccessPayment'
 // import store from '../store'
 
 Vue.use(Router)
@@ -45,6 +46,12 @@ const router = new Router({
             name: 'cart',
             meta: {requiredLogin: true},
             component: Cart
+        },
+        {
+            path: '/success',
+            name: 'success',
+            meta: {requiredLogin: true},
+            component: SuccessPayment
         }
     ]
 })

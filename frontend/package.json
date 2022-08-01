@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@vue-stripe/vue-stripe": "^4.4.4",
     "axios": "^0.27.2",
     "bulma-toast": "^2.4.1",
     "vee-validate": "^3.4.14",
